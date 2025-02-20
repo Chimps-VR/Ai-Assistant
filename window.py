@@ -1,5 +1,4 @@
-i
-mport pygame
+import pygame
 import win32api
 import win32con
 import win32gui
