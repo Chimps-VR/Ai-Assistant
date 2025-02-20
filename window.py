@@ -1,7 +1,10 @@
 import pygame
+
 import win32api
 import win32con
 import win32gui
+
+import os
 
 pygame.init()
 
@@ -12,6 +15,11 @@ screen = pygame.display.set_mode((128, 128), pygame.NOFRAME)
 done = False
 transparent = (255, 0, 255)
 red = (255, 0, 0)
+assistantFolder = os.path.join(os.getcwd(), "/assistants/base/")
+animationsFolder = os.path.join(assistantFolder, "/animations/")
+soundsFolder = os.path.join(assistantFolder, "/sounds/")
+voiceFolder = os.path.join(assistantFolder, "/voice/")
+config = os.path.join(os.getcwd(), "/config.ini")
 
 # Get window
 hwnd = pygame.display.get_wm_info()["window"]
@@ -28,11 +36,25 @@ win32gui.SetLayeredWindowAttributes(hwnd,
                                     win32con.LWA_COLORKEY
                                     )
 
+def getWindowInformation(winHwnd, extra):
+    rect = win32gui.GetWindowRect(winHwnd)
+    x = rect[0]
+    y = rect[1]
+    w = rect[2] - x
+    h = rect[3] - y
+    rect = (x, y, w, h)
+    name = win32gui.GetWindowText(winHwnd)
+    print("Window %s:" % win32gui.GetWindowText(winHwnd))
+    print("\tLocation: (%d, %d)" % (x, y))
+    print("\t    Size: (%d, %d)" % (w, h))
+
 # Update loop
 while not done:
     for event in pygame.event.get():
         if event.type == pygame.QUIT:
             done = True
+
+    win32gui.EnumWindows(getWindowInformation, None)
 
     # Fill the screen with the color key
     screen.fill(transparent)
