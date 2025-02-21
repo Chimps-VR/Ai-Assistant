@@ -16,7 +16,8 @@ if __name__ == "__main__":
     done = False
     transparent = (255, 0, 255)
     red = (255, 0, 0)
-    assistantFolder = os.path.join(os.getcwd(), "/assistants/base/")
+    assistantName = "base"
+    assistantFolder = os.path.join(os.getcwd(), "/assistants/", "/"+assistantName+"/")
     animationsFolder = os.path.join(assistantFolder, "/animations/")
     soundsFolder = os.path.join(assistantFolder, "/sounds/")
     voiceFolder = os.path.join(assistantFolder, "/voice/")

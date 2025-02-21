@@ -1,12 +1,27 @@
 from chat_gen import *
+
 import os
 
 if __name__ == "__main__":
-    # Define Variables
-    modelDirectory = 'checkpoint/run1'
-    csvPath = os.path.join(modelDirectory, 'cleaned.csv')
 
-    # Prepare the CSV data
+    # Define some paths
+    assistantName = input("Assistant Name: ")
+    assistantFolder = os.path.join(os.getcwd(), "/assistants/", "/"+assistantName+"/")
+
+    # Create assistant folder if it does not exist
+    if not os.path.exists(assistantFolder):
+        os.mkdir(assistantFolder)
+    
+    # Define some more paths
+    modelDirectory = os.path.join(assistantFolder, 'checkpoint/', input("Checkpoint Name: "))
+    csvPath = os.path.join(modelDirectory, 'train.csv')
+
+    # Exit if training data doesn't exist
+    if not os.path.exists(csvPath):
+        raise Exception(f"File {csvPath} does not exist, this is required as you need training data to train a model!")
+        exit()
+
+    # Prepare the model arguments
     args = create_args(
         num_epochs=3,
         batch_size=4,
@@ -19,6 +34,5 @@ if __name__ == "__main__":
         repetition_penalty=1.2
     )
 
-    # Train the model
-    train_model(modelDirectory, csvDath, args)
-
+    # Train the model with the training data
+    train_model(modelDirectory, csvPath, args)
