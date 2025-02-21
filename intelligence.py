@@ -3,6 +3,6 @@ from chat_gen import *
 import os
 
 if __name__ == "__main__":
-    print("Oops, this is not suppost to be ran!")
+    raise Exception("Oops, this is not supposed to be ran without an import!")
     exit()
 
