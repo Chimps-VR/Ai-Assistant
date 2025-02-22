@@ -5,22 +5,20 @@ if __name__ == "__main__":
     import os
     import win32gui
     import win32api
+    import win32con
     from pynput.mouse import Listener
 
-    resolution = (128, 128)
     frame = 0
     holding = False
     done = False
     clock = pygame.time.Clock()
-    velocity = (3,0)
-    position = (0,0)
-    lastPosition = (0,0)
+    velocity = (0,0)
     gravity = 0.4
     friction = 1.5
     offset = (0,0)
     dt = 0
 
-    def on_click(x, y, button, pressed):
+    def onClick(x, y, button, pressed):
         global holding
         global offset
         global mouse
@@ -34,7 +32,7 @@ if __name__ == "__main__":
             else:
                 holding = False
 
-    listener = Listener(on_click=on_click)
+    listener = Listener(on_click=onClick)
     listener.start()
 
     idle = ([0, 1, 2, 1], 60)
@@ -54,13 +52,25 @@ if __name__ == "__main__":
     voiceFolder = os.path.join(assistantFolder, "voice")
     config = os.path.join(os.getcwd(), "config.ini")
 
+    displayInfo = {"width": win32api.GetSystemMetrics(win32con.SM_CXSCREEN), "height": win32api.GetSystemMetrics(win32con.SM_CYSCREEN)}
+    print(displayInfo)
+
+    resolution = (round(displayInfo["width"]/15), round(displayInfo["width"]/15))
+
+    print(resolution)
+
+    screen, hwnd = window.setupWindow(resolution)
+
+    position = (round(displayInfo["width"]/2), round(displayInfo["height"]/2))
+    lastPosition = position
+
     animation = window.setImages(animationsFolder)
 
     for frame in range(len(animation)):
         animation[frame] = window.resizeImage(animation[frame], resolution[0], resolution[1])
     animLen = len(animation)
-
-    screen, hwnd = window.setupWindow(resolution)
+    print(animLen)
+    print(animation)
 
     fps = pygame.display.get_current_refresh_rate()
 
@@ -89,9 +99,9 @@ if __name__ == "__main__":
             if position[0] < -50:
                 position = (-50, position[1])
                 velocity = (-50, velocity[1])
-            if position[0] > 1920-100:
-                position = (1920-100, position[1])
-                velocity = (1920-100, velocity[1])
+            if position[0] > displayInfo["width"]-100:
+                position = (displayInfo["width"]-100, position[1])
+                velocity = (displayInfo["width"]-100, velocity[1])
 
         if hit:
             currAnim = ouch

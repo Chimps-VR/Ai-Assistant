@@ -15,7 +15,7 @@ def setImages(path):
   
   image_files.sort(key=lambda f: int(''.join(filter(str.isdigit, f))))
 
-  images = [pygame.image.load(os.path.join(path, img)) for img in image_files]
+  images = [pygame.image.load(os.path.join(path, img)).convert(32) for img in image_files]
 
   return images
 
