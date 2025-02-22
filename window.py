@@ -29,8 +29,11 @@ def setupWindow(resolution):
   # Set the window style
   win32gui.SetWindowLong(hwnd, 
                         win32con.GWL_EXSTYLE,
-                        win32gui.GetWindowLong(hwnd, win32con.GWL_EXSTYLE) | win32con.WS_EX_LAYERED
-                        )
+                        win32gui.GetWindowLong(hwnd, win32con.GWL_EXSTYLE) | 
+                        win32con.WS_EX_LAYERED | 
+                        win32con.WS_EX_NOACTIVATE | 
+                        win32con.WS_EX_TOOLWINDOW |
+                        win32con.WS_EX_COMPOSITED)
 
 
   # Set the color key to the transparent color
