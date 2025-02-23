@@ -2,6 +2,7 @@ import sys
 import threading
 from pystray import Icon, MenuItem, Menu
 from PIL import Image, ImageDraw
+from frozenPythonHelper import *
 
 tray = None
 
@@ -12,7 +13,7 @@ class Tray:
         self.image = Image.new('RGBA', self.resolution, (255, 255, 255, 0))
         self.draw = ImageDraw.Draw(self.image)
 
-        self.iconImage = Image.open("icon.ico")
+        self.iconImage = Image.open(getResourcePath("icon.ico"))
 
         self.image.paste(self.iconImage, (0, 0), self.iconImage) # first for color third for transparency
         

@@ -35,7 +35,7 @@ a = Analysis(
     ['main.py'],
     pathex=[],
     binaries=[],
-    datas=[],
+    datas=[('Icon.ico', '.')],
     hiddenimports=[],
     hookspath=[],
     runtime_hooks=[],
@@ -52,8 +52,7 @@ exe = EXE(
     pyz,
     a.scripts,
     a.binaries,
-    datas=[('icon.ico', '.')],
-    [],
+    a.datas,
     name='main',
     debug=False,
     bootloader_ignore_signals=False,
@@ -67,8 +66,9 @@ exe = EXE(
     target_arch=None,
     codesign_identity=None,
     entitlements_file=None,
-    icon='Icon.ico'
+    icon='icon.ico',
 )
+
 
 os.system("echo INFO: Build completed, zipping EXE!")
 

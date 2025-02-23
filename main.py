@@ -14,6 +14,7 @@ if __name__ == "__main__":
 
     frame = 0
     holding = False
+    finalized = False
     done = False
     clock = pygame.time.Clock()
     velocity = (0,0)
@@ -98,7 +99,7 @@ if __name__ == "__main__":
 
     trayClass.icon.menu = tray.Menu(tray.MenuItem("Hide", hide), tray.MenuItem("Quit", exitFunc))
 
-    while not done:
+    while not done and not finalized:
         win32gui.EnumWindows(window.getWindowInformation, None)
         mouseX, mouseY = win32api.GetCursorPos()
         mouse = (mouseX, mouseY)
@@ -143,6 +144,34 @@ if __name__ == "__main__":
         lastPosition = position
         dt = clock.tick(fps)
         fpsDt = dt/15
+
+    
+    velocity = (0, -10)
+
+    while done and not finalized:
+        position = (position[0] + velocity[0], position[1] + velocity[1])
+        if holding:
+            position = (mouse[0] + offset[0], mouse[1] + offset[1])
+            velocity = ((position[0] - lastPosition[0])/3, (position[1] - lastPosition[1])/3)
+            currAnim = wobble
+        else:
+            velocity = (velocity[0], velocity[1] + (gravity*fpsDt))
+            currAnim = fall
+            if position[0] < -50:
+                position = (-50, position[1])
+                velocity = (-50, velocity[1])
+            if position[0] > displayInfo["width"]-100:
+                position = (displayInfo["width"]-100, position[1])
+                velocity = (displayInfo["width"]-100, velocity[1])
+        if position[1] > displayInfo["height"]:
+            finalized = True
+        frame += 1
+        lastPosition = position
+        window.update(frame, (round(position[0]), round(position[1])), 
+                currAnim[0][round(frame / currAnim[1]) % len(currAnim[0])], animation, screen, resolution)
+        dt = clock.tick(fps)
+        fpsDt = dt/15
+
 
 if done:
     pygame.quit()

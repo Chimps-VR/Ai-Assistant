@@ -11,15 +11,14 @@ import win32com.client
 import shutil
 import ctypes
 
-# Path to your bundled PyInstaller app (this could be relative or absolute)
-BUNDLED_APP_ZIP = "app.zip"
+from frozenPythonHelper import *
 
 class InstallerApp:
     def __init__(self, root):
         self.root = root
         self.root.title("Assistant Installer")
         self.root.geometry("400x300")
-        self.root.iconbitmap("icon.ico")
+        self.root.iconbitmap(getResourcePath("Icon.ico"))
         self.root.resizable(False, False)
 
         self.install_dir = "NOT_DETECTED_YET"
@@ -62,11 +61,7 @@ class InstallerApp:
         temp_dir = tempfile.mkdtemp()
 
         # Get the path to the bundled zip file in the executable
-        if getattr(sys, 'frozen', False):  
-            bundle_dir = os.path.dirname(sys.executable)
-            zip_path = os.path.join(bundle_dir, BUNDLED_APP_ZIP)
-        else:
-            zip_path = os.path.abspath(os.path.join(os.path.dirname(__file__), BUNDLED_APP_ZIP))
+        zip_path = getResourcePath("app.zip")
 
         try:
             # Keep zip_ref open as an instance variable
