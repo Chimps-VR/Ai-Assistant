@@ -17,8 +17,9 @@ BUNDLED_APP_ZIP = "app.zip"
 class InstallerApp:
     def __init__(self, root):
         self.root = root
-        self.root.title("Kurplunk Installer")
+        self.root.title("Assistant Installer")
         self.root.geometry("400x300")
+        self.root.iconbitmap("icon.ico")
         self.root.resizable(False, False)
 
         self.install_dir = "NOT_DETECTED_YET"
@@ -26,6 +27,9 @@ class InstallerApp:
         self.appName = "KurplunkAssistant"
 
         # Create GUI elements
+        self.version_label = tk.Label(self.root, text="Version 0.0.1", padx=10, pady=10)
+        self.version_label.place(relx=1.0, rely=1.0, anchor="se", x=-10, y=-10)
+
         self.status_label = tk.Label(self.root, text="Checking dependencies...", padx=10, pady=10)
         self.status_label.pack()
 

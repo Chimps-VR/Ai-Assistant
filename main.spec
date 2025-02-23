@@ -52,7 +52,7 @@ exe = EXE(
     pyz,
     a.scripts,
     a.binaries,
-    a.datas,
+    datas=[('icon.ico', '.')],
     [],
     name='main',
     debug=False,

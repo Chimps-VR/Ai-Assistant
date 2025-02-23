@@ -6,7 +6,7 @@ a = Analysis(
     ['installer.py'],
     pathex=[],
     binaries=[],
-    datas=[('app.zip', '.')],
+    datas=[('app.zip', '.'), ('icon.ico', '.')],
     hiddenimports=[],
     hookspath=[],
     runtime_hooks=[],

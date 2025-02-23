@@ -8,11 +8,13 @@ tray = None
 class Tray:
     def __init__(self):
         # Create an image for the icon
-        self.resolution = (64, 64)
+        self.resolution = (256, 256)
         self.image = Image.new('RGBA', self.resolution, (255, 255, 255, 0))
         self.draw = ImageDraw.Draw(self.image)
-        self.draw.ellipse((0, 0, 64, 64), fill="lightblue")
-        self.draw.ellipse((32, 32, 48, 48), fill="blue")
+
+        self.iconImage = Image.open("icon.ico")
+
+        self.image.paste(self.iconImage, (0, 0), self.iconImage) # first for color third for transparency
         
         self.icon = Icon("icon", self.image)
 
