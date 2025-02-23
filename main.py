@@ -1,6 +1,10 @@
+import sys
+
+
 if __name__ == "__main__":
     #import intelligence
     import window
+    import tray
     import pygame
     import os
     import win32gui
@@ -16,7 +20,8 @@ if __name__ == "__main__":
     gravity = 0.4
     friction = 1.5
     offset = (0,0)
-    dt = 0
+    dt = 15
+    fpsDt = 1
 
     def onClick(x, y, button, pressed):
         global holding
@@ -74,6 +79,25 @@ if __name__ == "__main__":
 
     fps = pygame.display.get_current_refresh_rate()
 
+    trayClass = tray.Tray()
+
+    def exitFunc():
+        global done
+        done = True
+        trayClass.stopEvent.set()
+
+    def hide():
+        trayClass.icon.notify("Right-Click the tray then click Show to unhide the assistant.", "Assistant")
+        win32gui.ShowWindow(hwnd, win32con.SW_HIDE)
+        trayClass.icon.menu = tray.Menu(tray.MenuItem("Show", show), tray.MenuItem("Quit", exitFunc))
+
+    def show():
+        trayClass.icon.notify("Right-Click the tray then click Hide to rehide the assistant.", "Assistant")
+        win32gui.ShowWindow(hwnd, win32con.SW_RESTORE)
+        trayClass.icon.menu = tray.Menu(tray.MenuItem("Hide", hide), tray.MenuItem("Quit", exitFunc))
+
+    trayClass.icon.menu = tray.Menu(tray.MenuItem("Hide", hide), tray.MenuItem("Quit", exitFunc))
+
     while not done:
         win32gui.EnumWindows(window.getWindowInformation, None)
         mouseX, mouseY = win32api.GetCursorPos()
@@ -84,8 +108,8 @@ if __name__ == "__main__":
             velocity = ((position[0] - lastPosition[0])/3, (position[1] - lastPosition[1])/3)
             currAnim = wobble
         else:
-            if position[1] < 905:
-                velocity = (velocity[0], velocity[1] + gravity)
+            if position[1] < round(displayInfo["height"]/1.19337016575):
+                velocity = (velocity[0], velocity[1] + (gravity*fpsDt))
                 currAnim = fall
             else:
                 velocity = (velocity[0]/friction, 0)
@@ -118,3 +142,11 @@ if __name__ == "__main__":
         window.windows = []
         lastPosition = position
         dt = clock.tick(fps)
+        fpsDt = dt/15
+
+if done:
+    pygame.quit()
+    trayClass.icon.stop()
+    sys.exit(0)
+else:
+    print("WTH HAPPENED SOMETHING BROKE!!! done SHOULD BE TRUE IF WE STOPPED THE LOOP!!!")
