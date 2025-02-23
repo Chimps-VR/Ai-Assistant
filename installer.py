@@ -30,7 +30,7 @@ class InstallerApp:
         self.version_label = tk.Label(self.root, text="Version 0.0.1", padx=10, pady=10)
         self.version_label.place(relx=1.0, rely=1.0, anchor="se", x=-10, y=-10)
 
-        self.status_label = tk.Label(self.root, text="Checking dependencies...", padx=10, pady=10)
+        self.status_label = tk.Label(self.root, text="Assistant Installer", padx=10, pady=10)
         self.status_label.pack()
 
         self.progress = ttk.Progressbar(self.root, orient="horizontal", length=300, mode="determinate", maximum=100)
@@ -144,7 +144,7 @@ class InstallerApp:
         self.log_message("Shortcut created.")
         
         messagebox.showinfo("Success", "Installation completed successfully.")
-        exit()
+        sys.exit()
 
     def extract_next_file(self):
         """ Extracts one file at a time asynchronously to keep the UI responsive. """
@@ -175,15 +175,6 @@ class InstallerApp:
 
     def install_app(self):
         """ Main installation process. """
-        self.status_label.config(text="Checking dependencies...")
-        self.root.update_idletasks()
-
-        # Check dependencies
-        # if not self.check_dependencies():
-        #    messagebox.showerror("Error", "Python is not installed or not found.")
-        #    self.status_label.config(text="Installation Failed")
-        #    return
-
         self.status_label.config(text="Extracting files...")
         self.log_message("Extracting files...")
         self.root.update_idletasks()
@@ -205,16 +196,18 @@ if __name__ == "__main__":
 
     def run_as_admin():
         """ Relaunch the script with administrator privileges. """
-        debug = ""
-        if sys.argv[0].endswith(".py"):
-            script = sys.argv[0]
+        script = sys.argv[0]  # The current script path
+    
+        if getattr(sys, 'frozen', False):
+            # If running as a built executable, re-run itself as admin
+            ctypes.windll.shell32.ShellExecuteW(None, "runas", sys.executable, script, None, 1)
         else:
-            script = sys.executable + " " + " ".join(sys.argv[1:])
-            debug = "w"
+            # If running as a script, re-run using the Python interpreter
+            python_exe = sys.executable  # Path to python.exe
+            ctypes.windll.shell32.ShellExecuteW(None, "runas", python_exe, script, None, 1)
 
-        # Run the script as admin
-        ctypes.windll.shell32.ShellExecuteW(None, "runas", os.path.join(os.path.dirname(sys.executable), f"python{debug}.exe"), script, None, 1)
-        exit()
+        sys.exit()
+
 
     if not is_admin():
         run_as_admin()

@@ -1,4 +1,5 @@
 @echo off
+cls
 echo building main.py and others.
 del /f /q dist
 del /f /q build
